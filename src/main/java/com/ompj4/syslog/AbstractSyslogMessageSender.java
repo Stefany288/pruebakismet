@@ -9,6 +9,7 @@ import com.cloudbees.syslog.*;
 import com.cloudbees.syslog.sender.SyslogMessageSender;
 import com.cloudbees.syslog.util.InternalLogger;
 
+import  javax.annotation.Nullable;
 import javax.annotation.Nonnull;
 import java.io.CharArrayWriter;
 import java.io.IOException;

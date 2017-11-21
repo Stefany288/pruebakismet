@@ -6,6 +6,7 @@
 package com.ompj4.syslog;
 
 import com.cloudbees.syslog.*;
+import com.cloudbees.syslog.Facility;
 import com.cloudbees.syslog.SyslogMessage;
 import com.cloudbees.syslog.util.CachingReference;
 
@@ -32,7 +33,7 @@ import java.util.logging.Level;
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
 @ThreadSafe
-public class UdpSyslogMessageSender extends AbstractSyslogMessageSender {
+public final class UdpSyslogMessageSender extends AbstractSyslogMessageSender {
     /**
      * {@link java.net.InetAddress InetAddress} of the remote Syslog Server.
      *
@@ -75,18 +76,24 @@ public class UdpSyslogMessageSender extends AbstractSyslogMessageSender {
             Writer out = new OutputStreamWriter(baos, UTF_8);
             message.toSyslogMessage(messageFormat, out);
             out.flush();
+            System.out.println("Entro 1");
             Date d = new Date();
             message.setTimestamp(d);
+            System.out.println("el valor de level Finest:: es esto"+Level.FINEST);
+            System.out.println("esto tiene el if: "+logger.isLoggable(Level.FINEST));
             if (logger.isLoggable(Level.FINEST)) {
+                System.out.println("Entro 2");
                 logger.finest("Send syslog message " + new String(baos.toByteArray(), UTF_8));
             }
             byte[] bytes = baos.toByteArray();
             DatagramPacket packet = new DatagramPacket(bytes, bytes.length, syslogServerHostnameReference.get(), syslogServerPort);
             datagramSocket.send(packet);
         } catch (IOException e) {
+            System.out.println("Entro 3");
             sendErrorCounter.incrementAndGet();
             throw e;
         } catch (RuntimeException e) {
+            System.out.println("Entro 4");
             sendErrorCounter.incrementAndGet();
             throw e;
         } finally {
